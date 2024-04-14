@@ -11,14 +11,9 @@ export async function generateURL(originalUrl: string) {
       originalUrl,
     });
     if (existingRecord) {
-      const pushField = { timeStamp: Date.now };
-      existingRecord.interactions.push(pushField);
-      console.log(existingRecord);
-      await existingRecord.save();
-      console.log(existingRecord);
       return {
         status: "ok",
-        shortId: existingRecord.shortId,
+        shortId: existingRecord.shortId as string,
       };
     }
 
@@ -32,7 +27,7 @@ export async function generateURL(originalUrl: string) {
 
     return {
       status: "ok",
-      shortId,
+      shortId: shortId as string,
     };
   } catch (err) {
     console.log(err);
@@ -43,18 +38,18 @@ export async function generateURL(originalUrl: string) {
 export async function getRealUrl(shortId: string) {
   try {
     await connectToDB();
-    const url = await URL.findOneAndUpdate({ shortId },{$push: {interactions: {tStamp: Date.now}}});
+
+    const url = await URL.findOneAndUpdate(
+      { shortId },
+      { $push: { interactions: { tStamp: Date.now() } } }
+    );
+
     if (url) {
-      // const pushField = "one";
-      // url.interactions.push(pushField);
-      // // console.log(url);
-      // await url.save();
-      // console.log(url);
       return url.originalUrl;
     }
     return null;
   } catch (err) {
-    // console.log(err);
+    console.log(err);
     console.log("couldn't get the real url");
   }
 }
@@ -63,8 +58,20 @@ export async function getInfo(shortId: string) {
     await connectToDB();
     const url = await URL.findOne({ shortId });
     if (url) {
-    
-      return url; 
+      return url;
+    }
+    return null;
+  } catch (err) {
+    // console.log(err);
+    console.log("couldn't get the info for the url");
+  }
+}
+export async function getInfoForm(shortId: string) {
+  try {
+    await connectToDB();
+    const url = await URL.findOne({ shortId });
+    if (url) {
+      return url.interactions.length;
     }
     return null;
   } catch (err) {

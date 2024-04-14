@@ -14,8 +14,9 @@ const urlSchema = new mongoose.Schema(
     },
     interactions: {
 
-type: [{tStamp: Date}],
+type: [{tStamp: Number}],
 default: [],
+required: true,
 
     } ,
   },

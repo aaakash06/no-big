@@ -1,10 +1,10 @@
 "use client";
 
-import { generateURL } from "@/utility/actions.db";
+import { generateURL, getInfoForm } from "@/utility/actions.db";
 import { redirect, useRouter } from "next/navigation";
 import React, { useContext, useRef, useState } from "react";
 
-const Form = () => {
+const InfoForm= () => {
   const formAction = async (formData: FormData) => {
     if (!localStorage.getItem("requestNumber")) {
       localStorage.requestNumber = 0;
@@ -12,22 +12,24 @@ const Form = () => {
     if (localStorage.requestNumber >= 20) {
       return setwarning("your request limit of 20 has reached");
     }
-    const { input } = Object.fromEntries(formData);
-    if (localStorage.input == input) {
-      if (!shortUrl) {
-        setShortUrl(localStorage.lastUrl);
+   let { input } = Object.fromEntries(formData);
+   //@ts-ignore
+    input= input.match(/\/(.*?)$/)[1];
+    if (localStorage.inputInfo == input) {
+      if (!info) {
+        setinfo(localStorage.lastInfo);
       }
 
       return setwarning("Same URL! Try giving different one");
     }
 
-    localStorage.input = input;
+    localStorage.inputInfo = input;
 
     //@ts-ignore
-    const { shortId } =
-      await generateURL(input as string);
-    setShortUrl(shortId);
-    localStorage.lastUrl = shortId;
+    const infoo =
+      await getInfoForm(input as string);
+    setinfo(infoo);
+    localStorage.lastInfo = infoo;
     if (warning) {
       setwarning("");
     }
@@ -36,7 +38,7 @@ const Form = () => {
   };
 
   // const inputBox = useRef<HTMLInputElement>(null);
-  const [shortUrl, setShortUrl] = useState("");
+  const [info, setinfo] = useState("");
   const [warning, setwarning] = useState("");
   const router = useRouter()
 
@@ -46,7 +48,7 @@ const Form = () => {
         action={(formData) => {
           formAction(formData);
         }}
-        className="flex justify-center mb-5 gap-0"
+        className="flex justify-center mb- gap-0"
       >
         <input
           // ref={inputBox}
@@ -55,21 +57,16 @@ const Form = () => {
           placeholder="Enter the link here"
           className="px-4 py-2 border-2 w-[400px]"
         />
-        <button className="px-3 bg-sky-500 text-white">Shorten URL</button>
+        <button className="px-3 bg-green-500 text-white">Get Info </button>
       </form>
       {warning && <div className="my-7 py-3 border-2 ">{warning}</div>}
-      {shortUrl && (
+      {info && (
         <div className="my-7 py-3 border-2 ">
-          Your short URL :{" "}
-        
- 
-            {" "}
-            localhost:3000/{shortUrl}
-  
+         No of Clicks :  {info}
         </div>
       )}
     </>
   );
 };
 
-export default Form;
+export default InfoForm;

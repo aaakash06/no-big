@@ -1,10 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins, Roboto, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 
 const inter = Inter({ subsets: ["latin"] });
-const poppins = Poppins({subsets :['latin'], weight: '200' })
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: "300",
+  variable: "--font-poppins",
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: "500",
+  variable: "--font-roboto",
+});
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: "500",
+  variable: "--font-spaceGrotesk",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,10 +32,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
- 
-      <body className={poppins.className}>{children}</body>
-
-     
+      <body
+        className={`${poppins.variable} ${spaceGrotesk.variable} ${roboto.variable} flex flex-col justify-between min-h-screen bg-gray-50`}
+      >
+        {children}
+       
+      </body>
     </html>
   );
 }
