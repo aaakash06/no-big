@@ -24,8 +24,7 @@ const Form = () => {
     localStorage.input = input;
 
     //@ts-ignore
-    const { shortId } =
-      await generateURL(input as string);
+    const { shortId } = await generateURL(input as string);
     setShortUrl(shortId);
     localStorage.lastUrl = shortId;
     if (warning) {
@@ -38,7 +37,7 @@ const Form = () => {
   // const inputBox = useRef<HTMLInputElement>(null);
   const [shortUrl, setShortUrl] = useState("");
   const [warning, setwarning] = useState("");
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <>
@@ -60,12 +59,7 @@ const Form = () => {
       {warning && <div className="my-7 py-3 border-2 ">{warning}</div>}
       {shortUrl && (
         <div className="my-7 py-3 border-2 ">
-          Your short URL :{" "}
-        
- 
-            {" "}
-            localhost:3000/{shortUrl}
-  
+          Your short URL : nbu-bice.vercel.app/{shortUrl}
         </div>
       )}
     </>
